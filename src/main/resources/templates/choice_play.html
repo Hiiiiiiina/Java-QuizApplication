@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>「４択クイズアプリ」：PLAY</title>
+</head>
+<body>
+	<h2>4択クイズ</h2>
+	<p th:text="${quiz.question}"></p>
+	<form th:action="@{/menu/choice/check}" method="post">
+	    <input type="hidden" name="id" th:value="${quiz.id}" />
+		
+		<button type="submit" name="answer" value="1">
+			① <span th:text="${quiz.choice1}"></span>
+		</button><br>
+		<button type="submit" name="answer" value="2">
+			② <span th:text="${quiz.choice2}"></span>
+		</button><br>
+		<button type="submit" name="answer" value="3">
+			③ <span th:text="${quiz.choice3}"></span>
+		</button><br>
+		<button type="submit" name="answer" value="4">
+			④ <span th:text="${quiz.choice4}"></span>
+		</button>
+	</form>
+</body>
+</html>

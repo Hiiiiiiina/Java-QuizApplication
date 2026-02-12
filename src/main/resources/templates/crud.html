@@ -10,7 +10,7 @@
 	<p th:if="${complete}" th:text="${complete}" style="color:blue"></p>
 	
 	<form method="POST"
-		th:action="${quizForm.newQuiz}? @{/quiz/insert} : @{/quiz/update}" th:object="${quizForm}">
+		th:action="${quizForm.newQuiz}? @{/menu/quiz/insert} : @{/menu/quiz/update}" th:object="${quizForm}">
 		
 		<label>クイズの内容：</label><br>
 		<textarea rows="5" cols="50" th:field="*{question}"></textarea>
@@ -29,12 +29,20 @@
 		<div th:if="${#fields.hasErrors('author')}" th:errors="*{author}" style="color:red"></div>
 		<input th:if="${id}" type="hidden" th:field="*{id}">
 		<input type="submit" value="送信">
+		<br><br>
+		
+		<a th:if="${quizForm.newQuiz}" th:href="@{/menu}" class="menu-button">メニューに戻る</a>
 	</form>
 	<br>
-	<hr>
-	
-	<div th:if="${quizForm.newQuiz}" style="margin: 10px">
-		<h3>登録クイズ一覧：<a th:href="@{/quiz/play}">プレイ</a><br></h3>
+	<hr>	
+	<div th:if="${quizForm.newQuiz}" style="margin: 10px">	
+		<h3>CSV一括登録</h3>
+		<form th:action="@{/menu/quiz/upload}" method="post" enctype="multipart/form-data">
+			<input type="file" name="file" accept=".csv">
+			<button type="submit">アップロード</button>
+		</form>	
+		<hr>	
+		<h3>登録クイズ一覧：<a th:href="@{/menu/quiz/play/multi}">プレイ</a><br></h3>
 		<p th:if="${delcomplete}" th:text="${delcomplete}" style="color:blue"></p>
 		<p th:if="${msg}" th:text="${msg}" style="color:red"></p>
 		<table border="1" th:unless="${#lists.isEmpty(list)}" style="table-layout: fixed;">
@@ -53,12 +61,12 @@
 				<td th:text="${obj.author}"></td>
 				
 				<td>
-					<form method="GET" th:action="@{/quiz/{id}(id=${obj.id})}">
+					<form method="GET" th:action="@{/menu/quiz/{id}(id=${obj.id})}">
 						<input type="submit" value="編集">						
 					</form>
 				</td>
 				<td>
-					<form method="POST" th:action="@{/quiz/delete}">
+					<form method="POST" th:action="@{/menu/quiz/delete}">
 						<input type="hidden" name="id" th:value="${obj.id}">
 						<input type="submit" value="削除">
 					</form>
@@ -70,7 +78,7 @@
 	</div>
 	
 	<p th:unless="${quizForm.newQuiz}">
-		<a href="#" th:href="@{/quiz}">CRUD画面へ戻る</a>
+		<a href="#" th:href="@{/menu/quiz}">CRUD画面へ戻る</a>
 	</p>
 </body>
 </html>

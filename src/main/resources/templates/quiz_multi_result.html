@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>結果発表</title>
+</head>
+<body>
+
+<h2>結果</h2>
+
+<p>
+	<strong th:text="${total}"></strong>問中
+	<strong th:text="${correctCount}"></strong>問 正解！
+</p>
+<hr>
+<a th:href="@{/menu}">メニューに戻る</a>
+
+</body>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>○×クイズ</title>
+</head>
+<body>
+	<h2>○×クイズ</h2>
+	<p>
+		第 <span th:text="${current}"></span> 問 ／
+		<span th:text="${total}"></span> 問
+	</p>
+	<p th:text="${quiz.question}"></p>
+	<form th:action="@{/menu/quiz/play/multi}" method="post">
+		<button type="submit" name="answer" value="true">○</button>
+		<button type="submit" name="answer" value="false">×</button>
+	</form>
+</body>
+</html>

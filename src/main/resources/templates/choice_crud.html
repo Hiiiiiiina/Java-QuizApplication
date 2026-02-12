@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>「４択クイズ」アプリ</title>
+</head>
+<body>
+	<h1>「４択クイズ」アプリ:CRUD</h1>
+	<h3 th:text="${title}">タイトル</h3>
+	<p th:if="${complete}" th:text="${complete}" style="color:blue"></p>
+	
+	<form method="POST"
+		th:action="${choiceQuizForm.newQuiz}? @{/menu/choice/insert} : @{/menu/choice/update}" th:object="${choiceQuizForm}">
+			
+		<label>クイズの内容：</label><br>
+		<textarea rows="5" cols="50" th:field="*{question}"></textarea><br>
+		<br>
+		
+		<label>選択肢：</label><br>
+		①：<input type="text" th:field="*{choice1}"><br>
+		②：<input type="text" th:field="*{choice2}"><br>
+		③：<input type="text" th:field="*{choice3}"><br>
+		④：<input type="text" th:field="*{choice4}"><br>
+		<br>
+		
+		<label>正解：</label>
+		<select th:field="*{correctChoice}">
+			<option value="1">①</option>
+			<option value="2">②</option>
+			<option value="3">③</option>
+			<option value="4">④</option>
+		</select>
+		<br><br>
+		
+		<label>作成者：</label><br>
+		<input type="text" th:field="*{author}">
+		<br>
+		<div th:if="${#fields.hasErrors('author')}" th:errors="*{author}" style="color:red"></div>
+		<input th:if="${id}" type="hidden" th:field="*{id}">
+		<input type="submit" value="送信">
+		<br><br>
+		
+		<a th:if="${choiceQuizForm.newQuiz}" th:href="@{/menu}" class="menu-button">メニューに戻る</a>
+	</form>
+	<br>
+	<hr>	
+	<div th:if="${choiceQuizForm.newQuiz}" style="margin: 10px">
+		<h3>CSV一括登録</h3>
+			<form th:action="@{/menu/choice/upload}" method="post" enctype="multipart/form-data">
+				<input type="file" name="file" accept=".csv">
+				<button type="submit">アップロード</button>
+			</form>
+		<hr>
+		<h3>登録クイズ一覧：<a th:href="@{/menu/choice/play}">プレイ</a><br></h3>
+		<p th:if="${delcomplete}" th:text="${delcomplete}" style="color:blue"></p>
+		<p th:if="${msg}" th:text="${msg}" style="color:red"></p>
+		<table border="1" th:unless="${#lists.isEmpty(list)}" style="table-layout: fixed;">
+			<tr>
+				<th>ID</th>
+				<th>内容</th>
+				<th>解答</th>
+				<th>作成者</th>
+				<th>編集</th>
+				<th>削除</th>
+			</tr>
+			<tr th:each="quiz : ${list}" align="center">
+				<td th:text="${quiz.id}"></td>
+				<td th:text="${quiz.question}" align="left"></td>
+				<td th:text="${quiz.correctChoice}"></td>
+				<td th:text="${quiz.author}"></td>
+				<td>
+					<form method="GET" th:action="@{/menu/choice/{id}(id=${quiz.id})}">
+						<input type="submit" value="編集">
+					</form>
+				</td>
+				<td>
+					<form method="POST" th:action="@{/menu/choice/delete}">
+						<input type="hidden" name="id" th:value="${quiz.id}">
+						<input type="submit" value="削除">
+					</form>
+				</td>
+			</tr>
+		</table>
+		
+		<p th:if="${#lists.isEmpty(list)}">登録されているクイズはありません。</p>
+	</div>
+	<p th:unless="${choiceQuizForm.newQuiz}">
+		<a href="#" th:href="@{/menu/choice}">CRUD画面へ戻る</a>
+	</p>
+</body>
+</html>

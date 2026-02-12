@@ -1,7 +1,12 @@
 package com.example.quiz.controller;
 
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.quiz.entity.Quiz;
@@ -21,7 +27,7 @@ import com.example.quiz.form.QuizForm;
 import com.example.quiz.service.QuizService;
 
 @Controller
-@RequestMapping("/quiz")
+@RequestMapping("/menu/quiz")
 public class QuizController {
 	@Autowired
 	QuizService service;
@@ -54,11 +60,52 @@ public class QuizController {
 		if(!bindingResult.hasErrors()) {
 			service.insertQuiz(quiz);
 			redirectAttributes.addFlashAttribute("complete", "登録が完了しました");
-			return "redirect:/quiz";
+			return "redirect:/menu/quiz";
 		} else {
 			return showList(quizForm, model);
 		}
 	}
+	
+	@PostMapping("/upload")
+	public String uploadCsv(
+			@RequestParam("file") MultipartFile file,
+			RedirectAttributes redirectAttributes) {
+		if (file.isEmpty()) {
+			redirectAttributes.addFlashAttribute("msg", "ファイルが選択されていません");
+			return "redirect:/menu/quiz";
+		}
+		
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+
+			String line;
+			boolean firstLine = true;
+			int count = 0;
+			
+			while ((line = reader.readLine()) != null) {
+				if (firstLine) {
+					firstLine = false;
+					continue;
+					}
+				
+				String[] data = line.split(",");
+				
+				Quiz quiz = new Quiz();
+				quiz.setQuestion(data[0]);
+				quiz.setAnswer(Boolean.parseBoolean(data[1]));
+				quiz.setAuthor(data[2]);
+				
+				service.insertQuiz(quiz);
+			}
+			
+			redirectAttributes.addFlashAttribute("complete", "CSV登録完了しました");
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("msg", "CSV読込エラー");
+		}
+		
+		return "redirect:/menu/quiz";
+		}
 	
 	@GetMapping("/{id}")
 	public String showUpdate(QuizForm quizForm, @PathVariable Integer id,Model model) {
@@ -91,7 +138,7 @@ public class QuizController {
 		if(!result.hasErrors()) {
 			service.updateQuiz(quiz);
 			redirectAttributes.addFlashAttribute("complete", "更新が完了しました");
-			return "redirect:/quiz/" + quiz.getId();
+			return "redirect:/menu/quiz/" + quiz.getId();
 		} else {
 			makeUpdateModel(quizForm, model);
 			return "crud";
@@ -125,7 +172,7 @@ public class QuizController {
 		
 		service.deleteQuizById(Integer.parseInt(id));
 		redirectAttributes.addFlashAttribute("delcomplete", "削除が完了しました");
-		return "redirect:/quiz";
+		return "redirect:/menu/quiz";
 	}
 	
 	@GetMapping("/play")
@@ -152,4 +199,77 @@ public class QuizController {
 		}
 		return "answer";
 	}
+	
+	@GetMapping("/play/multi")
+	public String startMultiPlay(
+			HttpSession session,
+			Model model) {
+		
+		List<Quiz> quizList = service.selectRandomQuizList(10);
+		
+		if (quizList.isEmpty()) {
+			model.addAttribute("msg", "問題がありません・・・");
+			return "play_multi";
+		}
+		
+		session.setAttribute("quizList", quizList);
+		session.setAttribute("currentIndex", 0);
+		session.setAttribute("correctCount", 0);
+		
+		model.addAttribute("quiz", quizList.get(0));
+		model.addAttribute("current", 1);
+		model.addAttribute("total", quizList.size());
+		
+		return "quiz_multi_play";
+	}
+	
+	@PostMapping("/play/multi")
+	public String answerMultiPlay(
+			@RequestParam Boolean answer,
+			HttpSession session,
+			Model model) {
+		
+		List<Quiz> quizList = (List<Quiz>) session.getAttribute("quizList");
+		Integer currentIndex = (Integer) session.getAttribute("currentIndex");
+		Integer correctCount = (Integer) session.getAttribute("correctCount");
+		
+		Quiz currentQuiz = quizList.get(currentIndex);
+		
+		if (currentQuiz.getAnswer().equals(answer)) {
+			correctCount++;
+		}
+		
+		currentIndex++;
+		
+		session.setAttribute("currentIndex", currentIndex);
+		session.setAttribute("correctCount", correctCount);
+		
+		if (currentIndex >= quizList.size()) {
+			return "redirect:/menu/quiz/play/result";
+		}
+		
+		Quiz nextQuiz = quizList.get(currentIndex);
+		
+		model.addAttribute("quiz", nextQuiz);
+		model.addAttribute("current", currentIndex + 1);
+		model.addAttribute("total", quizList.size());
+		
+		return "quiz_multi_play";
+	}
+	
+	@GetMapping("/play/result")
+	public String showResult(HttpSession session, Model model) {
+		
+		Integer correctCount = (Integer) session.getAttribute("correctCount");
+		List<Quiz> quizList = (List<Quiz>) session.getAttribute("quizList");
+		
+		model.addAttribute("correctCount", correctCount);
+		model.addAttribute("total", quizList.size());
+		
+		session.invalidate();
+		
+		return "quiz_multi_result";
+	}
 }
+
+

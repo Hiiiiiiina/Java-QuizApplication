@@ -1,5 +1,7 @@
 package com.example.quiz.service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.quiz.entity.Quiz;
 import com.example.quiz.repository.QuizRepository;
-
-
 
 @Service
 @Transactional
@@ -22,13 +22,14 @@ public class QuizServiceImpl implements QuizService {
 		// TODO 自動生成されたメソッド・スタブ
 		return repository.findAll();
 	}
-
+	
 	@Override
 	public Optional<Quiz> selectOneById(Integer id) {
 		// TODO 自動生成されたメソッド・スタブ
 		return repository.findById(id);
 	}
-
+	
+	
 	@Override
 	public Optional<Quiz> selectOneRandomQuiz() {
 		// TODO 自動生成されたメソッド・スタブ
@@ -37,9 +38,22 @@ public class QuizServiceImpl implements QuizService {
 		if(randId == null) {
 			return Optional.empty();
 		}
+		
 		return repository.findById(randId);
+		}
+	
+	@Override
+	public List<Quiz> selectRandomQuizList(int limit) {
+		List<Quiz> list = (List<Quiz>) repository.findAll();
+		Collections.shuffle(list);
+		return list.stream().limit(limit).toList();
+		}
+	
+	@Override
+	public List<Quiz> selectRandom10() {
+		return selectRandomQuizList(10);
 	}
-
+	
 	@Override
 	public Boolean checkQuiz(Integer id, Boolean myAnswer) {
 		// TODO 自動生成されたメソッド・スタブ
@@ -53,26 +67,23 @@ public class QuizServiceImpl implements QuizService {
 				check = true;
 			}
 		}
+		
 		return check;
 	}
 
 	@Override
 	public void insertQuiz(Quiz quiz) {
-		// TODO 自動生成されたメソッド・スタブ
 		repository.save(quiz);
 	}
 
 	@Override
 	public void updateQuiz(Quiz quiz) {
-		// TODO 自動生成されたメソッド・スタブ
 		repository.save(quiz);
 	}
 
 	@Override
 	public void deleteQuizById(Integer id) {
-		// TODO 自動生成されたメソッド・スタブ
 		repository.deleteById(id);
 	}
-
 }
 

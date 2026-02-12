@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>クイズアプリ　メニュー</title>
+<style>
+	.menu-button {
+		display: inline-block;
+		font-size: 20px;
+		color: black;
+		background-color: lemonchiffon;
+		padding: 15px;
+		margin-top: 15px;
+		margin-bottom: 30px;
+		margin-left: 50px;
+		text-decoration: none;
+	}	
+</style>
+</head>
+<body>
+	<h1>クイズアプリ メニュー</h1>
+	<br>
+	<div>
+		<a th:href="@{/menu/quiz}" class="menu-button">○×クイズで遊ぶ </a>
+	</div>
+	<div>
+		<a th:href="@{/menu/choice}" class="menu-button">４択クイズで遊ぶ</a>
+	</div>
+</body>
+</html>
