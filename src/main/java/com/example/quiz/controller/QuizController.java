@@ -45,7 +45,7 @@ public class QuizController {
 		Iterable<Quiz> list = service.selectAll();
 		model.addAttribute("list", list);
 		model.addAttribute("title", "登録用フォーム");
-		return "crud";
+		return "quiz/crud";
 	}
 	
 	@PostMapping("/insert")
@@ -117,7 +117,7 @@ public class QuizController {
 		}
 		
 		makeUpdateModel(quizForm, model);
-		return "crud";
+		return "quiz/crud";
 	} 
 	
 	private void makeUpdateModel(QuizForm quizForm, Model model) {
@@ -141,7 +141,7 @@ public class QuizController {
 			return "redirect:/menu/quiz/" + quiz.getId();
 		} else {
 			makeUpdateModel(quizForm, model);
-			return "crud";
+			return "quiz/crud";
 		}
 	}
 	
@@ -183,11 +183,11 @@ public class QuizController {
 			quizForm = quizFormOpt.get();
 		} else {
 			model.addAttribute("msg", "問題がありません・・・");
-			return "play";
+			return "quiz/play";
 		}
 		
 		model.addAttribute("quizForm", quizForm);
-		return "play";
+		return "quiz/play";
 	}
 	
 	@PostMapping("/check")
@@ -197,7 +197,7 @@ public class QuizController {
 		} else {
 			model.addAttribute("msg", "残念、不正解です・・・");
 		}
-		return "answer";
+		return "quiz/answer";
 	}
 	
 	@GetMapping("/play/multi")
@@ -209,7 +209,7 @@ public class QuizController {
 		
 		if (quizList.isEmpty()) {
 			model.addAttribute("msg", "問題がありません・・・");
-			return "play_multi";
+			return "quiz/quiz_multi_play";
 		}
 		
 		session.setAttribute("quizList", quizList);
@@ -220,7 +220,7 @@ public class QuizController {
 		model.addAttribute("current", 1);
 		model.addAttribute("total", quizList.size());
 		
-		return "quiz_multi_play";
+		return "quiz/quiz_multi_play";
 	}
 	
 	@PostMapping("/play/multi")
@@ -254,7 +254,7 @@ public class QuizController {
 		model.addAttribute("current", currentIndex + 1);
 		model.addAttribute("total", quizList.size());
 		
-		return "quiz_multi_play";
+		return "quiz/quiz_multi_play";
 	}
 	
 	@GetMapping("/play/result")
@@ -268,7 +268,7 @@ public class QuizController {
 		
 		session.invalidate();
 		
-		return "quiz_multi_result";
+		return "quiz/quiz_multi_result";
 	}
 }
 

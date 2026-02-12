@@ -43,7 +43,7 @@ public class ChoiceQuizController {
     	Iterable<ChoiceQuiz> list = service.selectAll();
     	model.addAttribute("list", list);
     	model.addAttribute("title", "4択クイズ登録");
-    	return "choice_crud";
+    	return "choice/choice_crud";
     }
 
     @PostMapping("/insert")
@@ -124,7 +124,7 @@ public class ChoiceQuizController {
     	}
     	
     	makeUpdateModel(form, model);
-    	return "choice_crud";
+    	return "choice/choice_crud";
     }
     
     private void makeUpdateModel(ChoiceQuizForm form, Model model) {
@@ -143,7 +143,7 @@ public class ChoiceQuizController {
     	
     	if (result.hasErrors()) {
     		makeUpdateModel(form, model);
-    		return "choice_crud";
+    		return "choice/choice_crud";
     	}
     	
     	service.updateQuiz(makeEntity(form));
@@ -194,11 +194,11 @@ public class ChoiceQuizController {
     	
     	if (quizOpt.isEmpty()) {
     		model.addAttribute("msg", "問題がありません・・・");
-    		return "choice_play";
+    		return "choice/choice_play";
     	}
     	
     	model.addAttribute("quiz", quizOpt.get());
-    	return "choice_play";
+    	return "choice/choice_play";
     }
     
     @PostMapping("/check")
@@ -208,6 +208,6 @@ public class ChoiceQuizController {
     		Model model) {
     	boolean result = service.checkQuiz(id, answer);
     	model.addAttribute("msg", result ? "正解です！" : "残念、不正解です・・・");
-    	return "choice_answer";
+    	return "choice/choice_answer";
     }
 }
