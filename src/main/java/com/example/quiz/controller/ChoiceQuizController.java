@@ -53,13 +53,13 @@ public class ChoiceQuizController {
     		Model model,
     		RedirectAttributes redirectAttributes) {
     	
-    	if (result.hasErrors()) {
+    	if (!result.hasErrors()) {
+    		service.insertQuiz(makeEntity(form));
+    		redirectAttributes.addFlashAttribute("complete", "登録が完了しました");
+    		return "redirect:/menu/choice";
+    	} else {
     		return showList(form, model);
     	}
-    	
-    	service.insertQuiz(makeEntity(form));
-    	redirectAttributes.addFlashAttribute("complete", "登録が完了しました");
-    	return "redirect:/menu/choice";
     }
     
     @PostMapping("/upload")

@@ -14,13 +14,22 @@
 			
 		<label>クイズの内容：</label><br>
 		<textarea rows="5" cols="50" th:field="*{question}"></textarea><br>
+		<div th:if="${#fields.hasErrors('question')}" th:errors="*{question}" style="color:red"></div>
 		<br>
 		
 		<label>選択肢：</label><br>
-		①：<input type="text" th:field="*{choice1}"><br>
-		②：<input type="text" th:field="*{choice2}"><br>
-		③：<input type="text" th:field="*{choice3}"><br>
+		①：<input type="text" th:field="*{choice1}"><br>		
+		②：<input type="text" th:field="*{choice2}"><br>		
+		③：<input type="text" th:field="*{choice3}"><br>		
 		④：<input type="text" th:field="*{choice4}"><br>
+		
+		<div th:if="${#fields.hasErrors('choice1')
+		or #fields.hasErrors('choice2')
+		or #fields.hasErrors('choice3')
+		or #fields.hasErrors('choice4')}"
+		style="color:red">
+		空白は許可されていません
+		</div>		
 		<br>
 		
 		<label>正解：</label>

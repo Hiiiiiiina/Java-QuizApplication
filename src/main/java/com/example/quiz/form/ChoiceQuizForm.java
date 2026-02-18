@@ -1,17 +1,29 @@
 package com.example.quiz.form;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class ChoiceQuizForm {
 	
 	private Integer id;
+	
+	@NotBlank
 	private String question;
 	
+	@NotBlank
 	private String choice1;
+	
+	@NotBlank
 	private String choice2;
+	
+	@NotBlank
 	private String choice3;
+	
+	@NotBlank
 	private String choice4;
 	
 	private Integer correctChoice;
 	
+	@NotBlank
 	private String author;
 	
 	private boolean newQuiz;
