@@ -6,22 +6,29 @@
 </head>
 <body>
 	<h2>4択クイズ</h2>
-	<p th:text="${quiz.question}"></p>
-	<form th:action="@{/menu/choice/check}" method="post">
-	    <input type="hidden" name="id" th:value="${quiz.id}" />
-		
-		<button type="submit" name="answer" value="1">
-			① <span th:text="${quiz.choice1}"></span>
-		</button><br>
-		<button type="submit" name="answer" value="2">
-			② <span th:text="${quiz.choice2}"></span>
-		</button><br>
-		<button type="submit" name="answer" value="3">
-			③ <span th:text="${quiz.choice3}"></span>
-		</button><br>
-		<button type="submit" name="answer" value="4">
-			④ <span th:text="${quiz.choice4}"></span>
-		</button>
-	</form>
+	<th:block th:if="${quiz == null}">
+		<p th:text="${msg}" style="color:red"></p>
+		<a th:href="@{/menu/choice}">CRUD画面へ戻る</a>
+	</th:block>
+	
+	<th:block th:unless="${quiz == null}">
+		<p th:text="${quiz.question}"></p>
+		<form th:action="@{/menu/choice/check}" method="post">
+			<input type="hidden" name="id" th:value="${quiz.id}" />
+			
+			<button type="submit" name="answer" value="1">
+				① <span th:text="${quiz.choice1}"></span>
+			</button><br>
+			<button type="submit" name="answer" value="2">
+				② <span th:text="${quiz.choice2}"></span>
+			</button><br>
+			<button type="submit" name="answer" value="3">
+				③ <span th:text="${quiz.choice3}"></span>
+			</button><br>
+			<button type="submit" name="answer" value="4">
+				④ <span th:text="${quiz.choice4}"></span>
+			</button>
+		</form>
+	</th:block>
 </body>
 </html>

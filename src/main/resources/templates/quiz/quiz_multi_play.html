@@ -6,14 +6,21 @@
 </head>
 <body>
 	<h2>○×クイズ</h2>
-	<p>
-		第 <span th:text="${current}"></span> 問 ／
-		<span th:text="${total}"></span> 問
-	</p>
-	<p th:text="${quiz.question}"></p>
-	<form th:action="@{/menu/quiz/play/multi}" method="post">
-		<button type="submit" name="answer" value="true">○</button>
-		<button type="submit" name="answer" value="false">×</button>
-	</form>
+	<th:block th:if="${quiz == null}">
+		<p th:text="${msg}" style="color:red"></p>
+		<a th:href="@{/menu/quiz}">CRUD画面へ戻る</a>
+	</th:block>
+	
+	<th:block th:if="${quiz != null}">
+		<p>
+			第 <span th:text="${current}"></span> 問 ／
+			<span th:text="${total}"></span> 問
+		</p>
+		<p th:text="${quiz.question}"></p>
+		<form th:action="@{/menu/quiz/play/multi}" method="post">
+			<button type="submit" name="answer" value="true">○</button>
+			<button type="submit" name="answer" value="false">×</button>
+		</form>
+	</th:block>
 </body>
 </html>

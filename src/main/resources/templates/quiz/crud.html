@@ -24,7 +24,7 @@
 		<div th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}" style="color:red"></div>
 		
 		<label>作成者：</label><br>
-		<input thpe="text" th:field="*{author}" />
+		<input type="text" th:field="*{author}" />
 		<br>
 		<div th:if="${#fields.hasErrors('author')}" th:errors="*{author}" style="color:red"></div>
 		<input th:if="${id}" type="hidden" th:field="*{id}">

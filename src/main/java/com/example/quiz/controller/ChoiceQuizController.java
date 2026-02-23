@@ -194,6 +194,7 @@ public class ChoiceQuizController {
     	
     	if (quizOpt.isEmpty()) {
     		model.addAttribute("msg", "問題がありません・・・");
+    		model.addAttribute("quiz", null);
     		return "choice/choice_play";
     	}
     	

@@ -8,13 +8,13 @@
 	<h1>「○×クイズアプリ」：PLAY</h1>
 	<h3>クイズ</h3>
 	<th:block th:if="${msg}">
-		<p th:text="${msg}" sthle="color red"></p>
+		<p th:text="${msg}" style="color:red"></p>
 		<a th:href="@{/menu/quiz}">CRUD画面へ</a>
 	</th:block>
 	
 	<th:block th:unless="${msg}">
 		<p th:text="${quizForm.question}">クイズ内容</p>
-		<form th:action="@{/quiz/check}" th:object="${quizForm}" method="POST">
+		<form th:action="@{/menu/quiz/check}" th:object="${quizForm}" method="POST">
 			<input type="hidden" th:field="*{id}">
 			<button name="answer" value="true">○</button>
 			<button name="answer" value="false">×</button>

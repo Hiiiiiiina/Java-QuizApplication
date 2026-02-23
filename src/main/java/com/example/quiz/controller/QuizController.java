@@ -209,6 +209,7 @@ public class QuizController {
 		
 		if (quizList.isEmpty()) {
 			model.addAttribute("msg", "問題がありません・・・");
+			model.addAttribute("quiz", null);
 			return "quiz/quiz_multi_play";
 		}
 		
